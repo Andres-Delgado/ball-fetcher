@@ -1,11 +1,11 @@
 import requests
 from utils.fileUtils import FileUtils
 
-authToken = 'o6eTd3tQzWA1S5byrvYvSjvRjwX25fdSoMoNXkEQ'
+authToken = ''
 url = 'https://ballchasing.com/api/'
-replay1 = '68069a05-ab40-4129-a7f1-14001abb461c'
+replay1 = ''
 
-replays = '?player-name=Steam%3A76561198078218740&playlist=ranked-standard&season=f11'
+replays = ''
 
 headers = {
   'User-Agent':
@@ -35,4 +35,3 @@ if __name__ == '__main__':
   # print(type(replay))
 
   replays = FileUtils.load_replays()
-  pass
