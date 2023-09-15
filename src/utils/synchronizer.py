@@ -13,7 +13,7 @@ class Synchronizer:
     # get and save each replay in a match
     for replayId, replayTitle in replaysDict.items():
       replay = Fetcher.get_replay(replayId)
-      FileUtils.save_week_replay(replay, week, matchName, replayTitle)
+      FileUtils.save_week_replay(replay, week, matchName, replayTitle, isRaw=True)
 
   @classmethod
   def sync_matches(cls, week: str, matches: dict):
@@ -26,14 +26,14 @@ class Synchronizer:
   def sync_week_replays(cls, weekId: str):
     # create week dir
     week = weekId.split('-')[0]
-    FileUtils.create_csrl_week_path(week)
+    FileUtils.create_csrl_week_path(week, isRaw=True)
 
     # get match replay groups from weekId
     groups = Fetcher.list_replay_groups(weekId)
 
     # create week/match dirs
     matchNames = [group['name'] for group in groups['list']]
-    [FileUtils.create_csrl_week_match_path(week, match) for match in matchNames]
+    [FileUtils.create_csrl_week_match_path(week, match, isRaw=True) for match in matchNames]
 
     # get matchIds in week
     matchIds = [group['id'] for group in groups['list']]
