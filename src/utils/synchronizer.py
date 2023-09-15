@@ -1,44 +1,26 @@
+from typing import List
+
 from fetcher import Fetcher
 from utils.fileUtils import FileUtils
 
 class Synchronizer:
-
-  # @classmethod
-  # def sync_replay(cls, week, match, replay):
-
-
-  # for each match
-  #   get_replays in group
-  #   for each replay
-  #       get_replay
-  #       save replay
-
   @classmethod
-  def sync_match_replays(cls, week, match, replays):
+  def sync_match(cls, week: str, matchName: str, replays: List[dict]):
     replayIds = [replay['id'] for replay in replays]
+    replayTitles = [replay['replay_title'].replace(' ', '_') for replay in replays]
+    replaysDict = dict(zip(replayIds, replayTitles))
 
-
-    # replays = {{'id': replay['id'], 'name': replay['replay_title']} for replay in replays}
-
-    # sort by replays.list.date
-    # rename
-
-    # print(*replays, sep='\n')
-
-    # for replayId in replayIds:
-    #   replay = Fetcher.get_replay(replayId)
-    #   FileUtils.save_week_replay(replay, week, match, )
-    #   pass
+    # get and save each replay in a match
+    for replayId, replayTitle in replaysDict.items():
+      replay = Fetcher.get_replay(replayId)
+      FileUtils.save_week_replay(replay, week, matchName, replayTitle)
 
   @classmethod
-  def sync_matches(cls, week, matchIds):
-    for matchId in [matchIds[0]]:
-      # Fetcher.get_replay(matchId)
+  def sync_matches(cls, week: str, matches: dict):
+    # get list of replays for each match in week
+    for matchId, matchName in matches.items():
       replays = Fetcher.list_replays(matchId)
-      cls.sync_match_replays(week, matchId, replays['list'])
-
-
-      # cls.sync_replay(week, match, name)
+      cls.sync_match(week, matchName, replays['list'])
 
   @classmethod
   def sync_week_replays(cls, weekId: str):
@@ -56,7 +38,5 @@ class Synchronizer:
     # get matchIds in week
     matchIds = [group['id'] for group in groups['list']]
 
-    # print(*matchIds, sep='\n')
-
-    cls.sync_matches(week, matchIds)
-
+    matches = dict(zip(matchIds, matchNames))
+    cls.sync_matches(week, matches)
