@@ -19,14 +19,27 @@ class FileUtils:
     return path
 
   @classmethod
-  def get_csrl_path(cls) -> Path:
-    path = Path.joinpath(cls.get_data_path(), 'csrl')
+  def get_data_raw_path(cls) -> Path:
+    path = Path.joinpath(cls.get_data_path(), 'raw')
     cls.verify_dir(path)
     return path
 
   @classmethod
-  def get_csrl_week_path(cls, weekStr: str) -> Path:
-    path = Path.joinpath(cls.get_csrl_path(), weekStr)
+  def get_data_clean_path(cls) -> Path:
+    path = Path.joinpath(cls.get_data_path(), 'clean')
+    cls.verify_dir(path)
+    return path
+
+  @classmethod
+  def get_csrl_path(cls, isRaw = False) -> Path:
+    dataPath = cls.get_data_raw_path() if isRaw else cls.get_data_clean_path()
+    path = Path.joinpath(dataPath, 'csrl')
+    cls.verify_dir(path)
+    return path
+
+  @classmethod
+  def get_csrl_week_path(cls, weekStr: str, isRaw = False) -> Path:
+    path = Path.joinpath(cls.get_csrl_path(isRaw), weekStr)
     cls.verify_dir(path)
     return path
 
@@ -35,13 +48,13 @@ class FileUtils:
   ##################
 
   @classmethod
-  def create_csrl_week_path(cls, weekStr: str):
-    path = Path.joinpath(cls.get_csrl_path(), weekStr)
+  def create_csrl_week_path(cls, weekStr: str, isRaw = False):
+    path = Path.joinpath(cls.get_csrl_path(isRaw), weekStr)
     cls.verify_dir(path)
 
   @classmethod
-  def create_csrl_week_match_path(cls, week: str, match: str):
-    path = Path.joinpath(cls.get_csrl_week_path(week), match)
+  def create_csrl_week_match_path(cls, week: str, match: str, isRaw = False):
+    path = Path.joinpath(cls.get_csrl_week_path(week, isRaw), match)
     cls.verify_dir(path)
 
   ################
@@ -49,8 +62,8 @@ class FileUtils:
   ################
 
   @classmethod
-  def save_week_replay(cls, replay: json, week: str, match, filename: str):
-    with open(cls.get_csrl_week_path(week).joinpath(match).joinpath(filename + '.json'), 'w') as outfile:
+  def save_week_replay(cls, replay: json, week: str, match, filename: str, isRaw = False):
+    with open(cls.get_csrl_week_path(week, isRaw).joinpath(match).joinpath(filename + '.json'), 'w') as outfile:
       json.dump(replay, outfile, indent=2)
 
   ################
@@ -58,12 +71,13 @@ class FileUtils:
   ################
 
   @classmethod
-  def load_replay(cls, fileName: str) -> dict:
-    with open(cls.get_replays_path().joinpath(fileName)) as file:
+  def load_replay(cls, path: Path) -> dict:
+    with open(path) as file:
       replay = json.load(file)
       return replay
 
   @classmethod
-  def load_replays(cls) -> List[dict]:
-    replayNames = [replay.name for replay in cls.get_replays_path().glob('*.json')]
-    return [cls.load_replay(name) for name in replayNames]
+  def load_replays(cls, isRaw = False) -> List[dict]:
+    dataPath = cls.get_data_raw_path() if isRaw else cls.get_data_clean_path()
+    replayPaths = dataPath.rglob('*.json')
+    return [cls.load_replay(path) for path in replayPaths]
