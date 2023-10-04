@@ -1,3 +1,4 @@
+import shutil
 import json
 from pathlib import Path
 from typing import List
@@ -62,9 +63,20 @@ class FileUtils:
   ################
 
   @classmethod
+  def save_replay(cls, path: Path, filename: str, replay: json):
+    with open(path.joinpath(filename), 'w') as outfile:
+      json.dump(replay, outfile, indent=2)
+
+  @classmethod
   def save_week_replay(cls, replay: json, week: str, match, filename: str, isRaw = False):
     with open(cls.get_csrl_week_path(week, isRaw).joinpath(match).joinpath(filename + '.json'), 'w') as outfile:
       json.dump(replay, outfile, indent=2)
+
+  @classmethod
+  def copy_raw_to_clean_replays(cls):
+    rawPath = cls.get_data_raw_path()
+    cleanPath = cls.get_data_clean_path()
+    shutil.copytree(rawPath, cleanPath, dirs_exist_ok=True)
 
   ################
   # Load Methods #

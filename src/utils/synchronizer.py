@@ -40,3 +40,9 @@ class Synchronizer:
 
     matches = dict(zip(matchIds, matchNames))
     cls.sync_matches(week, matches)
+
+  @classmethod
+  def sync(cls):
+    # cls.sync_week_replays('week1-')
+    # cls.sync_week_replays('week2-')
+    pass
