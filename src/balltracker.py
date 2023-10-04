@@ -1,8 +1,11 @@
-from utils.cleaner import Cleaner
-from utils.fileUtils import FileUtils
 from utils.synchronizer import Synchronizer
+from utils.cleaner import Cleaner
+
+def collect_clean():
+  Synchronizer.sync()
+  Cleaner.clean()
 
 if __name__ == '__main__':
-  # Synchronizer.sync_week_replays('week1-')
-  replays = FileUtils.load_replays(isRaw=True)
-  replays = Cleaner.clean(replays)
+  collect_clean()
+
+  # build players
