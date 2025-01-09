@@ -7,5 +7,8 @@ def collect_clean():
   Cleaner.clean()
 
 if __name__ == '__main__':
-  collect_clean()
-  PlayerBuilder.build()
+  print('lol')
+
+  # build players
+  # collect_clean()
+  # PlayerBuilder.build()
