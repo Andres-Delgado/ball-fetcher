@@ -6,6 +6,7 @@ def collect_clean():
   Cleaner.clean()
 
 if __name__ == '__main__':
-  collect_clean()
+  print('lol')
+  # collect_clean()
 
   # build players
