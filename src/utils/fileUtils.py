@@ -3,6 +3,12 @@ import json
 from pathlib import Path
 from typing import List
 
+from classes.player import Player
+
+#####################################################
+# TODO: restructure data to data/csrl/clean-raw/... #
+#####################################################
+
 class FileUtils:
   ################
   # Path Methods #
@@ -93,3 +99,29 @@ class FileUtils:
     dataPath = cls.get_data_raw_path() if isRaw else cls.get_data_clean_path()
     replayPaths = dataPath.rglob('*.json')
     return [cls.load_replay(path) for path in replayPaths]
+
+  ##################
+  # Player Methods #
+  ##################
+
+  @classmethod
+  def get_data_players_path(cls) -> Path:
+    path = Path.joinpath(cls.get_data_path(), 'players')
+    cls.verify_dir(path)
+    return path
+
+  @classmethod
+  def load_player(cls, playerId: str) -> dict:
+    path = Path.joinpath(cls.get_data_players_path(), playerId + '.json')
+
+    if not path.is_file():
+      return {}
+
+    with open(path) as file:
+      replay = json.load(file)
+      return replay
+
+  @classmethod
+  def save_player(cls, playerId: str, player: Player):
+    with open(cls.get_data_players_path().joinpath(playerId + '.json'), 'w') as outfile:
+      json.dump(player.__dict__, outfile, indent=2)
