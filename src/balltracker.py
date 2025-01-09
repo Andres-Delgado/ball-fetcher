@@ -1,3 +1,4 @@
+from utils.player_builder import PlayerBuilder
 from utils.synchronizer import Synchronizer
 from utils.cleaner import Cleaner
 
@@ -7,6 +8,7 @@ def collect_clean():
 
 if __name__ == '__main__':
   print('lol')
-  # collect_clean()
 
   # build players
+  # collect_clean()
+  # PlayerBuilder.build()
